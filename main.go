@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/TheDiemer/ocp4kcssearch/structs"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/TheDiemer/ocp4kcssearch/structs"
 )
 
 func main() {
@@ -23,9 +24,17 @@ func main() {
 			fmt.Println(err)
 		} else {
 			//fmt.Println(body)
-			var result structs.result
+			var result structs.Result
 			json.Unmarshal([]byte(body), &result)
-			fmt.Println(result["response"]["docs"][1098])
+
+			size := len(result.Response.Docs)
+			fmt.Println("We found", size, "and hydra told us we'd find", result.Response.NumFound)
+			/*for _, s := range result.Response.Docs {
+				fmt.Println("KCS:", s.ViewURI, "lists the following products: ", s.Product, " and the following tags: ", s.Tags, "\n---")
+			}*/
+			/*fmt.Println(result.Response.Docs[1100].SBRs)
+			fmt.Println(result.Response.Docs[1100].Language)
+			fmt.Println(result.Response.Docs[1100].Tags)*/
 			//var KCSs structs.KCSList
 			//json.Unmarshal([]byte(body), &KCSs)
 			/* Now we've got a structure of a ton of KCS Solutions/Articles where the
@@ -45,6 +54,6 @@ func urlBuilder() string {
 	params.Add("rows", strconv.Itoa(10000))
 	base.RawQuery = params.Encode()
 
-	fmt.Println(base.String())
+	// fmt.Println(base.String())
 	return base.String()
 }

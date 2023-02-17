@@ -1,6 +1,6 @@
 package structs
 
-type result struct {
+type Result struct {
 	Spellcheck     Spellcheck
 	ResponseHeader ResponseHeader
 	Response       Response
@@ -52,5 +52,56 @@ type Response struct {
 	NumFound int
 	Start    int
 	MaxScore float32
-	Docs     map[string]any
+	Docs     []KCS
+}
+
+type KCS struct {
+	DocumentKind          string   `json:"documentKind"`
+	URI                   string   `json:"uri"`
+	ResourceURI           string   `json:"resource_uri"`
+	Path                  string   `json:"path"`
+	ViewURI               string   `json:"view_uri"`
+	Title                 string   `json:"title"`
+	AllTitle              string   `json:"allTitle"`
+	SortTitle             string   `json:"sortTitle"`
+	ID                    string   `json:"id"`
+	SolutionID            string   `json:"solution.id"`
+	AuthorSSOName         string   `json:"authorSSOName"`
+	LastModifiedBySSOName string   `json:"lastModifiedBySSOName"`
+	HasPublishedRevision  string   `json:"hasPublishedVersion"`
+	Body                  []string `json:"body"`
+	Issue                 []string `json:"issue"`
+	IssueTag              []string `json:"issueTag"`
+	LastModifiedDate      string   `json:"lastModifiedDate"`
+	DisplayDate           string   `json:"displayDate"`
+	CreatedDate           string   `json:"createdDate"`
+	KCSState              string   `json:"kcsState"`
+	ModerationState       string   `json:"ModerationState"`
+	AccessState           string   `json:"accessState"`
+	SetLanguage           string   `json:"setLanguage"`
+	Abstract              string   `json:"abstract"`
+	DetectedLanguage      []string `json:"detectedLanguage"`
+	Language              string   `json:"language"`
+	SBRs                  []string `json:"sbr"`
+	Tags                  []string `json:"tag"`
+	Product               []string `json:"product"`
+	PublishedTitle        string   `json:"publishedTitle"`
+	PublishedAbstract     string   `json:"publishedAbstract"`
+	InternalTags          []string `json:"internalTags"`
+	CaseCount             int      `json:"caseCount"`
+	CaseCount365          int      `json:"caseCount_365"`
+	KCSRateUp             int      `json:"kcsRateUp"`
+	KCSRateDown           int      `json:"kcsRateDown"`
+	Category              []string `json:"category"`
+	PublicationState      string   `json:"publication_state"`
+	RequiresSubscription  bool     `json:"requires_subscription"`
+	ArticleType           string   `json:"article_type"`
+	BoostProduct          string   `json:"boostProduct"`
+	DetectedProducts      []string `json:"detectedProducts"`
+	DuplicateResourceID   string   `json:"duplicateResourceId"`
+	InferredTag           []string `json:"inferred_tag"`
+	Timestamp             string   `json:"timestamp"`
+	Component             []string `json:"component"`
+	Version               int      `json:"_version_"`
+	Elevated              bool     `json:"[elevated]"`
 }
