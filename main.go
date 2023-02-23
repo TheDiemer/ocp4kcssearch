@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -23,22 +25,47 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			//fmt.Println(body)
 			var result structs.Result
 			json.Unmarshal([]byte(body), &result)
 
 			size := len(result.Response.Docs)
 			fmt.Println("We found", size, "and hydra told us we'd find", result.Response.NumFound)
+			var data [][]string
+			tmpRow := []string{"Title", "ViewURI", "DocumentKind", "AuthorSSOName", "LastModifiedBySSOName", "CreatedDate", "LastModifiedDate", "HasPublishedRevision"}
+			data = append(data, tmpRow)
 			for _, s := range result.Response.Docs {
-				row := []string{s.Title, s.ViewURI, s.DocumentKind, s.AuthorSSOName, s.LastModifiedBySSOName, s.CreatedDate, s.LastModifiedDate, s.HasPublishedRevision}
-				fmt.Println(row)
-				//fmt.Println("KCS:", s.ViewURI, "lists the following products: ", s.Product, " and the following tags: ", s.Tags, "\n---")
+				var row []string
+				if s.Title == "" {
+					row = []string{s.AllTitle, s.ViewURI, s.DocumentKind, s.AuthorSSOName, s.LastModifiedBySSOName, s.CreatedDate, s.LastModifiedDate, s.HasPublishedRevision}
+				} else {
+					row = []string{s.Title, s.ViewURI, s.DocumentKind, s.AuthorSSOName, s.LastModifiedBySSOName, s.CreatedDate, s.LastModifiedDate, s.HasPublishedRevision}
+				}
+				data = append(data, row)
 			}
-
-			/* Now we've got a structure of a ton of KCS Solutions/Articles where the
-			Product includes RHOCP and the Internal Tags include ocp_4. */
+			success := csvWriter(data)
+			if success {
+				fmt.Println("The csv file containing all", size, "results in the new file: /tmp/OCP4KCS.csv")
+			} else {
+				fmt.Println("We encountered an error. Hopefully it should be recorded above.")
+			}
 		}
 	}
+}
+
+func csvWriter(data [][]string) bool {
+	csvFileName := "/tmp/OCP4KCS.csv"
+	csvFile, err := os.Create(csvFileName)
+	if err != nil {
+		fmt.Println("Apologies, but while trying to write", csvFileName, "and encountered the following error:\n", err)
+		return false
+	}
+	defer csvFile.Close()
+	writer := csv.NewWriter(csvFile)
+	defer writer.Flush()
+
+	writer.WriteAll(data)
+
+	return true
 }
 
 func urlBuilder() string {
@@ -52,6 +79,5 @@ func urlBuilder() string {
 	params.Add("rows", strconv.Itoa(10000))
 	base.RawQuery = params.Encode()
 
-	// fmt.Println(base.String())
 	return base.String()
 }

@@ -68,7 +68,7 @@ type KCS struct {
 	SolutionID            string   `json:"solution.id"`
 	AuthorSSOName         string   `json:"authorSSOName"`
 	LastModifiedBySSOName string   `json:"lastModifiedBySSOName"`
-	HasPublishedRevision  string   `json:"hasPublishedVersion"`
+	HasPublishedRevision  string   `json:"hasPublishedRevision"`
 	Body                  []string `json:"body"`
 	Issue                 []string `json:"issue"`
 	IssueTag              []string `json:"issueTag"`
